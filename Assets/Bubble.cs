@@ -1,16 +1,18 @@
-using TMPro;  // Ensure the TextMeshPro namespace is included
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Bubble : MonoBehaviour
 {
-    public BubbleType bubbleType;  // Reference to the ScriptableObject (BubbleType)
+    public BubbleType bubbleType;
 
     private Transform bubbleTransform;
     private CircleCollider2D gravityField;
-    private SpriteRenderer spriteRenderer; // Main circle's sprite renderer
-    private GameObject imageObject;       // Child object for the image
-    private TextMeshProUGUI valueText;  // Reference to the dynamically created value text object
-    private Canvas bubbleCanvas; // Reference to the Canvas for the UI
+    private SpriteRenderer spriteRenderer;
+    private GameObject imageObject;
+    private TextMeshProUGUI valueText;
+    private Canvas bubbleCanvas;
+    private RectTransform canvasRect; // Add this
 
     void Start()
     {
@@ -18,79 +20,87 @@ public class Bubble : MonoBehaviour
         gravityField = GetComponent<CircleCollider2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
-        // Apply bubble type properties
         ApplyBubbleType();
-
-        // Create and attach the image to the bubble
         CreateBubbleImage();
-
-        // Create and display the value text dynamically
         CreateValueText();
     }
 
     void Update()
     {
-        // Gradually grow the bubble
         if (bubbleTransform.localScale.x < bubbleType.maxRadius)
         {
             float growth = bubbleType.growthRate * Time.deltaTime;
             bubbleTransform.localScale += new Vector3(growth, growth, 0);
-
-            // Adjust gravitational field size
             gravityField.radius = bubbleTransform.localScale.x / 2;
 
-            // Ensure the image stays centered and scales correctly
             if (imageObject != null)
             {
-                imageObject.transform.localScale = Vector3.one / bubbleTransform.localScale.x; // Keep consistent size
+                imageObject.transform.localScale = Vector3.one / bubbleTransform.localScale.x;
+            }
+
+            // Adjust Canvas size based on bubble scale. No need to scale the canvas
+            if (bubbleCanvas != null)
+            {
+                canvasRect.sizeDelta = bubbleTransform.localScale * 100; // Important: Scale the rect
             }
         }
 
-        // Update the value text with the value from BubbleType
         if (valueText != null && bubbleType != null)
         {
-            valueText.text = "₪" + bubbleType.value.ToString("F0"); // Display the value as a whole number with the currency symbol
+            valueText.text = "₪" + bubbleType.value.ToString("F0");
         }
     }
 
+
     private void ApplyBubbleType()
     {
-        // Set color of the main circle's sprite
         if (spriteRenderer != null)
         {
             Color bubbleColor = bubbleType.bubbleColor;
-            bubbleColor.a = 1f; // Ensure the alpha is fully opaque
+            bubbleColor.a = 1f;
             spriteRenderer.color = bubbleColor;
         }
     }
 
     private void CreateBubbleImage()
     {
-        // Create a child object for the image
         if (bubbleType.bubbleImage != null)
         {
             imageObject = new GameObject("BubbleImage");
             imageObject.transform.SetParent(transform);
-            imageObject.transform.localPosition = Vector3.zero; // Center the image
+            imageObject.transform.localPosition = Vector3.zero;
 
             SpriteRenderer imageRenderer = imageObject.AddComponent<SpriteRenderer>();
             imageRenderer.sprite = bubbleType.bubbleImage;
-            imageRenderer.sortingOrder = spriteRenderer.sortingOrder + 1; // Ensure the image appears above the bubble
+            imageRenderer.sortingOrder = spriteRenderer.sortingOrder + 1; 
         }
     }
 
     private void CreateValueText()
     {
-        // NOT WORKING SHIT
+        // Create a Canvas for the bubble
+        bubbleCanvas = new GameObject("BubbleCanvas").AddComponent<Canvas>();
+        bubbleCanvas.renderMode = RenderMode.WorldSpace; // Use WorldSpace for scaling
+        bubbleCanvas.transform.SetParent(transform);
+        bubbleCanvas.transform.localPosition = Vector3.zero;
 
-        // GameObject valueTextObject = new GameObject("ValueText");
-        // valueTextObject.transform.localPosition = bubbleTransform.position; // Start with the default position
+        canvasRect = bubbleCanvas.GetComponent<RectTransform>(); // Get the RectTransform
+        canvasRect.sizeDelta = Vector2.one * 100; // Initial size
 
-        // valueText = valueTextObject.AddComponent<TextMeshProUGUI>();
-        // valueText.text = "₪" + bubbleType.value.ToString("F0"); // Display the value with the currency symbol
-        // valueText.fontSize = 14; // Set font size (adjust to your needs)
-        // valueText.sortingOrder = spriteRenderer.sortingOrder + 2;
+        // Create the value text object as a child of the canvas
+        GameObject valueTextObject = new GameObject("ValueText");
+        valueTextObject.transform.SetParent(bubbleCanvas.transform);
+        valueTextObject.transform.localPosition = Vector3.zero; // Center the text
 
-        // valueText.color = Color.white;
+        valueText = valueTextObject.AddComponent<TextMeshProUGUI>();
+        valueText.text = "₪" + bubbleType.value.ToString("F0");
+        valueText.fontSize = 14;
+        valueText.color = Color.white;
+        valueText.alignment = TextAlignmentOptions.Center; //Center the text
+
+        // Crucial Fixes:
+        RectTransform textRect = valueText.GetComponent<RectTransform>();
+        textRect.sizeDelta = new Vector2(100, 50); // Set a reasonable size
+        textRect.localScale = Vector3.one; // Ensure no local scaling
     }
 }
