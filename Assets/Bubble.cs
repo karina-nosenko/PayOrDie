@@ -94,7 +94,7 @@ public class Bubble : MonoBehaviour
 
         valueText = valueTextObject.AddComponent<TextMeshProUGUI>();
         valueText.text = "₪" + bubbleType.value.ToString("F0");
-        valueText.fontSize = 14;
+        valueText.fontSize = 0.2F;
         valueText.color = Color.white;
         valueText.alignment = TextAlignmentOptions.Center; //Center the text
 
