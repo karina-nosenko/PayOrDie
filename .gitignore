@@ -1,0 +1,34 @@
+# User-specific files
+UserSettings/
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Dd]ist/
+
+# User-specific settings
+.vs/
+.vscode/
+.idea/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Unity generated files
+Library/
+Temp/
+Obj/
+Build/
+Builds/
+
+# Uncomment if you have unity package manager settings
+# Packages/manifest.json
+# Packages/packages-lock.json
+
+# User-specific files
+*.user
+*.userprefs
+*.suo
