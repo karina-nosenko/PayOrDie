@@ -56,32 +56,12 @@ public class DeathAngel : MonoBehaviour
                         rb.position = bubble.transform.position; // Snap to bubble
                     }
                     if(distance<0.01f){
+                        DebtDisplay debtDisplay = FindObjectOfType<DebtDisplay>();
+                        debtDisplay.AddValueToDebt(bubble.bubbleType.value);
                         Destroy(bubble.gameObject); 
                     }
                 }
             }
         }
-    }
-
-
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        // Check if the Death Angel collided with a bubble
-        Bubble bubble = collision.gameObject.GetComponent<Bubble>();
-        if (bubble != null)
-        {
-            // Trigger the bubble's collision event
-            OnBubbleCollision(bubble);
-        }
-    }
-
-    private void OnBubbleCollision(Bubble bubble)
-    {
-        // Example event logic: Destroy the bubble and log a message
-        Debug.Log($"Death Angel collided with bubble: {bubble.bubbleType.bubbleName}");
-        Destroy(bubble.gameObject);
-
-        // You can implement additional event behavior here
     }
 }

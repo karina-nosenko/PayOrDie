@@ -14,6 +14,15 @@ public class DebtDisplay : MonoBehaviour
     void UpdateDebt()
     {
         Globals.debt += 1; // Increase the debt by 1
-        debtText.text = "₪" + Globals.debt.ToString("N0"); // Update the text to show the debt
+        UpdateDebtText();
+    }
+
+    private void UpdateDebtText(){
+        debtText.text = "₪" + Globals.debt.ToString("N0");
+    }
+
+    public void AddValueToDebt(double value){
+        Globals.debt += value;
+        UpdateDebtText();
     }
 }
