@@ -15,7 +15,7 @@ MonoBehaviour:
   bubbleName: Alcohol
   bubbleColor: {r: 0.8666667, g: 0.18823528, b: 0.52018905, a: 0}
   growthRate: 0.03
-  gravitationalForce: 10
+  gravitationalForce: 8
   maxRadius: 80
   value: 2000
   bubbleImage: {fileID: 0}

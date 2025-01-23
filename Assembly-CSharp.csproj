@@ -61,7 +61,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Bubble.cs" />
+    <Compile Include="Assets\Person\PersonType.cs" />
     <Compile Include="Assets\Scenes\BubbleType.cs" />
+    <Compile Include="Assets\Person\Person.cs" />
     <Compile Include="Assets\DeathAngel.cs" />
     <Compile Include="Assets\Globals.cs" />
     <Compile Include="Assets\DebtDisplay.cs" />
